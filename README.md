@@ -130,8 +130,8 @@ paxctl -Cpm /usr/bin/grub-mount
 Resolve apache pax only on app server
 
 ```
-paxctl -cm /var/chroot/source/usr/bin/apache2
-paxctl -cm /var/chroot/document/usr/bin/apache2
+paxctl -cm /var/chroot/source/usr/sbin/apache2
+paxctl -cm /var/chroot/document/usr/sbin/apache2
 ```
 
 Install grsec kernel
