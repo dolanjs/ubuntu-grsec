@@ -47,7 +47,7 @@ gpg --recv-key 6092693E
 
 At this point, you should disconnect this server from the Internet and treat it as an offline (air-gapped) server.
 
-## Download kernel and Grsecurity on the online server
+## Download kernel and Grsecurity on online server
 
 Create a directory for Grsecurity, the Linux kernel, and the other tools you will be downloading.
 
@@ -176,7 +176,7 @@ linux-image-3.2.61-grsec_3.2.61-grsec-10.00.Custom_amd64.deb
 
 Put the packages on a USB stick and transfer them to the SecureDrop App and Monitor servers.
 
-## Install and configure PaX on App and Monitor servers
+## Set up PaX on App and Monitor servers
 
 Proceed with the following steps only if the SecureDrop App and Monitor servers are up and running.
 
@@ -222,7 +222,7 @@ sudo echo "kernel.grsecurity.chroot.deny.unix = 0" >> /etc/sysctl.conf
 sudo sysctl -p /etc/sysctl.conf
 ```
 
-### Set the new kernel to be the default on both App and Monitor servers
+### Configure App and Monitor servers to use new kernel by default
 
 Set the new kernel to be the default on both servers. Start by finding the
 exact menuentry name for the kernel.
@@ -234,7 +234,7 @@ grep menuentry /boot/grub/grub
 Copy the output and use it in the *sed* command below to set this kernel as the default.
 
 ```
-sudo sed -i "s/^GRUB_DEFAULT=.*$/GRUB_DEFAULT=2>Ubuntu, with Linux 3.2.61-grsec/" /etc default/grub
+sudo sed -i "s/^GRUB_DEFAULT=.*$/GRUB_DEFAULT=2>Ubuntu, with Linux 3.2.61-grsec/" /etc/default/grub
 sudo update-grub
 sudo reboot
 ```
@@ -245,7 +245,7 @@ Before you move on to the final step, ensure that SecureDrop is working as expec
 
 ### Lock it down
 
-Once you have confirmed that everything works, configure the Grsecurity lock in sysctl.conf.
+Once you have confirmed that everything works, configure the Grsecurity lock in *sysctl.conf*.
 
 ```
 sudo echo "kernel.grsecurity.grsec_lock = 1" >> /etc/sysctl.conf
