@@ -1,23 +1,40 @@
 Ubuntu kernel with grsecurity
 =============================
 
-This guide outlines the steps required to compile a kernel for [Ubuntu Server 12.04 LTS (Precise Pangolin)](http://releases.ubuntu.com/12.04/) with [Grsecurity](https://grsecurity.net/), specifically for use with [SecureDrop](https://pressfreedomfoundation.org/securedrop).
+This guide outlines the steps required to compile a kernel for [Ubuntu
+Server 12.04 LTS (Precise Pangolin)](http://releases.ubuntu.com/12.04/)
+with [Grsecurity](https://grsecurity.net/), specifically for use with
+[SecureDrop](https://pressfreedomfoundation.org/securedrop). At the end
+of this guide, you will have two Debian packages that you transfer to
+the *App* and *Monitor* servers.
 
 ## Before you begin
 
 The steps in this guide assume you have the following set up and running:
 
- * SecureDrop App and Monitor servers (see the [installation guide](https://github.com/freedomofpress/securedrop/blob/develop/docs/install.md))
- * An offline server running [Ubuntu Server 14.04 (Trusty Tahr)](http://releases.ubuntu.com/14.04/) that you use to compile the kernel
- * An online server running 12.04 or 14.04 that you use to download package dependencies
+ * SecureDrop App and Monitor servers (see the [installation
+   guide](https://github.com/freedomofpress/securedrop/blob/develop/docs/install.md))
+ * An offline server running [Ubuntu Server 14.04 (Trusty
+   Tahr)](http://releases.ubuntu.com/14.04/) that you use to compile the
+kernel
+ * An online server running 12.04 or 14.04 that you use to download
+   package dependencies
 
-The idea is that you will use the online server to download package dependencies, put the files on a USB stick and transfer them to the offline server, then use the offline server to verify digital signatures and compile the new kernel.
+The idea is that you will use the online server to download package
+dependencies, put the files on a USB stick and transfer them to the
+offline server, then use the offline server to verify digital signatures
+and compile the new kernel.
 
-The current version of this document assumes you are compiling Linux kernel version *3.2.61* and Grsecurity version *3.0-3.2.61-201407232156*. When running commands that include filenames and/or version numbers, make sure it all matches what you have on your server.
+The current version of this document assumes you are compiling Linux
+kernel version *3.2.61* and Grsecurity version
+*3.0-3.2.61-201407232156*. When running commands that include filenames
+and/or version numbers, make sure it all matches what you have on your
+server.
 
 ## Update packages on online and offline servers
 
-Run the following set of commands to ensure all packages are up to date on the online and offine servers.
+Run the following set of commands to ensure all packages are up to date
+on the online and offine servers.
 
 
 ```
@@ -28,7 +45,8 @@ sudo apt-get dist-upgrade
 
 ## Install dependencies on the offline server
 
-Run the following command to install the package dependencies required to compile the new kernel with Grsecurity.
+Run the following command to install the package dependencies required
+to compile the new kernel with Grsecurity.
 
 ```
 sudo apt-get install libncurses5-dev build-essential kernel-package git-core gcc-4.8 gcc-4.8-plugin-dev make
@@ -45,11 +63,13 @@ gpg --import spender-gpg-key.asc
 gpg --recv-key 6092693E
 ```
 
-At this point, you should disconnect this server from the Internet and treat it as an offline (air-gapped) server.
+At this point, you should disconnect this server from the Internet and
+treat it as an offline (air-gapped) server.
 
 ## Download kernel and Grsecurity on online server
 
-Create a directory for Grsecurity, the Linux kernel, and the other tools you will be downloading.
+Create a directory for Grsecurity, the Linux kernel, and the other tools
+you will be downloading.
 
 ```
 mkdir grsec
@@ -62,7 +82,8 @@ Make a copy of the *kernel-package* directory on the online server.
 cp -a /usr/share/kernel-package ubuntu-package
 ```
 
-When downloading the Linux kernel and Grsecurity, make sure you get the long term stable versions and that the version numbers match up.
+When downloading the Linux kernel and Grsecurity, make sure you get the
+long term stable versions and that the version numbers match up.
 
 ```
 wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.61.tar.xz
@@ -77,11 +98,13 @@ Download the Ubuntu kernel overlay.
 git clone git://kernel.ubuntu.com/ubuntu/ubuntu-precise.git
 ```
 
-Transfer all the files in the *grsec* directory from the online server to the offline server using a USB stick.
+Transfer all the files in the *grsec* directory from the online server
+to the offline server using a USB stick.
 
 ## Before you compile on the offline server
 
-After moving the files from the online server to the offline server, you should have the following in your *grsec* directory.
+After moving the files from the online server to the offline server, you
+should have the following in your *grsec* directory.
 
 ```
 grsecurity-3.0-3.2.61-201407232156.patch	    spender-gpg-key.asc
@@ -92,7 +115,8 @@ linux-3.2.61.tar.xz
 
 ### Gather the required files for the Ubuntu kernel overlay
 
-Copy the required directories from the Ubuntu kernel overlay directory to the correct *ubuntu-package* directory.
+Copy the required directories from the Ubuntu kernel overlay directory
+to the correct *ubuntu-package* directory.
 
 ```
 cp ubuntu-precise/debian/control-scripts/p* ubuntu-package/pkg/image/
@@ -136,7 +160,8 @@ Configure Grsecurity with the following command.
 make menuconfig
 ```
 
-You will want to follow the steps below to select and configure the correct options.
+You will want to follow the steps below to select and configure the
+correct options.
 
  * Navigate to *Security options*
    * Navigate to *Grsecurity*
@@ -159,29 +184,33 @@ Use all available cores when compiling the kernel.
 export CONCURRENCY_LEVEL="$(grep -c '^processor' /proc/cpuinfo)"
 ```
 
-Compile the kernel with the Ubuntu overlay. Note that this step may fail if you
-are using a small VPS/virtual machine.
+Compile the kernel with the Ubuntu overlay. Note that this step may fail
+if you are using a small VPS/virtual machine.
 
 ```
 make-kpkg clean  
 sudo make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image kernel_headers 
 ```
 
-When the build process is done, you will have the following Debian packages in the *grsec* directory:
+When the build process is done, you will have the following Debian
+packages in the *grsec* directory:
 
 ```
 linux-headers-3.2.61-grsec_3.2.61-grsec-10.00.Custom_amd64.deb
 linux-image-3.2.61-grsec_3.2.61-grsec-10.00.Custom_amd64.deb
 ```
 
-Put the packages on a USB stick and transfer them to the SecureDrop App and Monitor servers.
+Put the packages on a USB stick and transfer them to the SecureDrop App
+and Monitor servers.
 
 ## Set up PaX on App and Monitor servers
 
-Proceed with the following steps only if the SecureDrop App and Monitor servers are up and running.
+Proceed with the following steps only if the SecureDrop App and Monitor
+servers are up and running.
 
-Both servers need to have PaX installed and configured. PaX is part of common
-security-enhancing kernel patches and secure distributions, such as Grsecurity.
+Both servers need to have PaX installed and configured. PaX is part of
+common security-enhancing kernel patches and secure distributions, such
+as Grsecurity.
 
 ```
 sudo apt-get install paxctl
@@ -194,8 +223,8 @@ sudo paxctl -Cpm /usr/bin/grub-mount
 
 ### Ensure the web server can start on the App server
 
-The following commands ensure the web server can start and should **only** be
-run on the App server.
+The following commands ensure the web server can start and should
+**only** be run on the App server.
 
 ```
 sudo paxctl -cm /var/chroot/source/usr/sbin/apache2
@@ -213,8 +242,8 @@ sudo update-grub
 
 ### Disable conflicting jail restrictions on the App server
 
-The following commands disable conflicting jail restrictions and should **only**
-be run on the App server.
+The following commands disable conflicting jail restrictions and should
+**only** be run on the App server.
 
 ```
 sudo echo "kernel.grsecurity.chroot.caps = 0" >> /etc/sysctl.conf
@@ -224,14 +253,15 @@ sudo sysctl -p /etc/sysctl.conf
 
 ### Configure App and Monitor servers to use new kernel by default
 
-Set the new kernel to be the default on both servers. Start by finding the
-exact menuentry name for the kernel.
+Set the new kernel to be the default on both servers. Start by finding
+the exact menuentry name for the kernel.
 
 ```
 grep menuentry /boot/grub/grub
 ```
 
-Copy the output and use it in the *sed* command below to set this kernel as the default.
+Copy the output and use it in the *sed* command below to set this kernel
+as the default.
 
 ```
 sudo sed -i "s/^GRUB_DEFAULT=.*$/GRUB_DEFAULT=2>Ubuntu, with Linux 3.2.61-grsec/" /etc/default/grub
@@ -241,11 +271,14 @@ sudo reboot
 
 ### Test SecureDrop functionality
 
-Before you move on to the final step, ensure that SecureDrop is working as expected by testing SSH, browsing to the .onion sites, completing the submission and reply process, and so on.
+Before you move on to the final step, ensure that SecureDrop is working
+as expected by testing SSH, browsing to the .onion sites, completing the
+submission and reply process, and so on.
 
 ### Lock it down
 
-Once you have confirmed that everything works, configure the Grsecurity lock in *sysctl.conf*.
+Once you have confirmed that everything works, configure the Grsecurity
+lock in *sysctl.conf*.
 
 ```
 sudo echo "kernel.grsecurity.grsec_lock = 1" >> /etc/sysctl.conf
