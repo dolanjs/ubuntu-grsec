@@ -282,4 +282,5 @@ lock in *sysctl.conf*.
 
 ```
 sudo echo "kernel.grsecurity.grsec_lock = 1" >> /etc/sysctl.conf
+sudo sysctl -p /etc/sysctl.conf
 ```
