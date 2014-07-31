@@ -257,7 +257,7 @@ Set the new kernel to be the default on both servers. Start by finding
 the exact menuentry name for the kernel.
 
 ```
-grep menuentry /boot/grub/grub
+grep menuentry /boot/grub/grub.cfg
 ```
 
 Copy the output and use it in the *sed* command below to set this kernel
