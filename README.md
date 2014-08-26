@@ -267,7 +267,7 @@ Copy the output and use it in the *sed* command below to set this kernel
 as the default.
 
 ```
-sudo sed -i "s/^GRUB_DEFAULT=.*$/GRUB_DEFAULT=2>Ubuntu, with Linux 3.2.61-grsec/" /etc/default/grub
+sudo sed -i "s/^GRUB_DEFAULT=.*$/GRUB_DEFAULT=2 # Ubuntu with Linux 3.2.61-grsec/" /etc/default/grub
 sudo update-grub
 sudo reboot
 ```
