@@ -284,5 +284,8 @@ Once you have confirmed that everything works, configure the Grsecurity
 lock in *sysctl.conf*.
 
 ```
-sudo echo "kernel.grsecurity.grsec_lock = 1" >> /etc/sysctl.conf
+sudo su -
+echo "kernel.grsecurity.grsec_lock = 1" >> /etc/sysctl.conf
+exit
+sudo sysctl -p /etc/sysctl.conf
 ```
