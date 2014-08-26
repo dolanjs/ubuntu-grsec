@@ -248,9 +248,10 @@ The following commands disable conflicting jail restrictions and should
 **only** be run on the App server.
 
 ```
-sudo echo "kernel.grsecurity.chroot.caps = 0" >> /etc/sysctl.conf
-sudo echo "kernel.grsecurity.chroot.deny.unix = 0" >> /etc/sysctl.conf
-sudo sysctl -p /etc/sysctl.conf
+sudo su -
+echo "kernel.grsecurity.chroot.caps = 0" >> /etc/sysctl.conf
+echo "kernel.grsecurity.chroot.deny.unix = 0" >> /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf
 ```
 
 ### Configure App and Monitor servers to use new kernel by default
