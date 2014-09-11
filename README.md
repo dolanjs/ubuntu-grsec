@@ -60,7 +60,7 @@ mkdir grsec
 cd grsec/
 wget https://grsecurity.net/spender-gpg-key.asc
 gpg --import spender-gpg-key.asc
-gpg --recv-key 6092693E
+gpg --keyserver pool.sks-keyservers.net --recv-key 647F28654894E3BD457199BE38DBBDC86092693E
 ```
 
 At this point, you should disconnect this server from the Internet and
