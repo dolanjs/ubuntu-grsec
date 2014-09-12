@@ -20,6 +20,8 @@ kernel
  * An online server running 12.04 or 14.04 that you use to download
    package dependencies
 
+Since SecureDrop is only supported on 64-bit platforms, make sure you download a 64-bit version of Ubuntu to build the kernel. The `.iso` filename will have an `-amd64` suffix.
+
 The idea is that you will use the online server to download package
 dependencies, put the files on a USB stick and transfer them to the
 offline server, then use the offline server to verify digital signatures
