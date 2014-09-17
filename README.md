@@ -249,8 +249,8 @@ The following commands disable conflicting jail restrictions and should
 
 ```
 sudo su -
-echo "kernel.grsecurity.chroot.caps = 0" >> /etc/sysctl.conf
-echo "kernel.grsecurity.chroot.deny.unix = 0" >> /etc/sysctl.conf
+echo "kernel.grsecurity.chroot_caps = 0" >> /etc/sysctl.conf
+echo "kernel.grsecurity.chroot_deny_unix = 0" >> /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
 ```
 
