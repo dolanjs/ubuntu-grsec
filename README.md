@@ -259,10 +259,10 @@ sysctl -p /etc/sysctl.conf
 ### Configure App and Monitor servers to use new kernel by default
 
 Set the new kernel to be the default on both servers. Start by finding
-the exact menuentry name for the kernel.
+the exact menuentry name for the new kernel.
 
 ```
-grep menuentry /boot/grub/grub.cfg
+grep menuentry /boot/grub/grub.cfg | cut -d "'" -f2 | grep "grsec$"
 ```
 
 Copy the output and use it in the *sed* command below to set this kernel
@@ -273,6 +273,8 @@ sudo sed -i "s/^GRUB_DEFAULT=.*$/GRUB_DEFAULT=\"2>Ubuntu, with Linux 3.2.61-grse
 sudo update-grub
 sudo reboot
 ```
+
+After reboot, verify the you booted the new kernel by running `uname -a`. Confirm the the `-grsec` kernel is the one shown. If it is not, double-check the value you set for `GRUB_DEFAULT` in the previous sed command.
 
 ### Test SecureDrop functionality
 
