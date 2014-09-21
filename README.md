@@ -223,18 +223,6 @@ sudo paxctl -Cpm /usr/bin/grub-script-check
 sudo paxctl -Cpm /usr/bin/grub-mount  
 ```
 
-### Ensure the web server can start on the App server
-
-The following commands ensure the web server can start and should
-**only** be run on the App server.
-
-```
-sudo schroot -a -u root --directory / service apache2 stop
-sudo paxctl -cm /var/chroot/source/usr/sbin/apache2
-sudo paxctl -cm /var/chroot/document/usr/sbin/apache2
-sudo schroot -a -u root --directory / service apache2 start
-```
-
 ### Install new kernel on both App and Monitor servers
 
 Install the new kernel with Grsecurity on both servers.
