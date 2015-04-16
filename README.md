@@ -1,3 +1,7 @@
+These directions have been migrated to the [FPF grsec repo](https://github.com/freedomofpress/grsec).
+The ansible tasks that install the grsec kernel are currently [here](https://github.com/freedomofpress/securedrop/blob/develop/install_files/ansible-base/roles/common/tasks/from_fpf_repo_install_grsec.yml) but will also be migrated to the FPF grsec repo.
+
+
 Ubuntu kernel with grsecurity
 =============================
 
